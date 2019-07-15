@@ -61,8 +61,17 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> error(T data) {
         return new Result(2,Boolean.FALSE,"2","flase",data);
     }
-
+    public static Result error() {
+        return new Result(2,Boolean.FALSE,"2","flase");
+    }
+    public static Result error(String msg) {
+        return new Result(2,Boolean.FALSE,"2",msg);
+    }
     public static <T> Result<T> success(T data){
         return new Result(1,Boolean.TRUE,"1","true",data);
+    }
+
+    public static Result success(){
+        return new Result(1,Boolean.TRUE,"1","true");
     }
 }

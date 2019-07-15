@@ -1,14 +1,17 @@
 package com.manage.controller;
 
+import com.manage.base.until.Result;
 import com.manage.dto.UserDTO;
 import com.manage.model.User;
 import com.manage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.concurrent.*;
 
 
@@ -25,14 +28,39 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/getUser", method = RequestMethod.GET)
+    @Resource(name="redisTemplate")
+    private RedisTemplate redisTemplate;
+
+    @RequestMapping(value = "/setUser", method = RequestMethod.POST)
     @ResponseBody
-    public User getUser(UserDTO user) {
+    public Result setUser(UserDTO user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(12L);
         System.out.println("============" + user.getId());
         User user1 = userService.getUserById(user.getId());
-        return user1;
+        try {
+            redisTemplate.opsForValue().set(user1.getUsername(),"usr");
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("往redis set 值异常！！！");
+        }
+    }
+
+    @RequestMapping(value = "/getUser", method = RequestMethod.POST)
+    @ResponseBody
+    public Result getUser(UserDTO user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(12L);
+        System.out.println("============" + user.getId());
+        User user1 = userService.getUserById(user.getId());
+        try {
+            String user2 = (String) redisTemplate.opsForValue().get(user1.getUsername());
+            return Result.success(user2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("获取redis 值异常！！！");
+        }
     }
 
     public void testFeature() {
