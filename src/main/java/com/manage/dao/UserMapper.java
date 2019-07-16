@@ -1,9 +1,8 @@
 package com.manage.dao;
 
 import com.manage.model.User;
-import org.mybatis.spring.annotation.MapperScan;
 
-@MapperScan
+
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 
