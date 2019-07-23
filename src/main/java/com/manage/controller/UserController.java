@@ -4,6 +4,7 @@ import com.manage.base.until.Result;
 import com.manage.dto.UserDTO;
 import com.manage.model.User;
 import com.manage.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ import java.util.concurrent.*;
 @Controller
 @RequestMapping("/ssm/user")
 public class UserController {
+    private static Logger LOGGER = Logger.getLogger(UserController.class);
+
     @Autowired
     UserService userService;
 
@@ -34,6 +37,7 @@ public class UserController {
     @RequestMapping(value = "/setUser", method = RequestMethod.POST)
     @ResponseBody
     public Result setUser(UserDTO user) {
+        LOGGER.info("请求进入");
         UserDTO userDTO = new UserDTO();
         userDTO.setId(12L);
         System.out.println("============" + user.getId());
@@ -43,6 +47,7 @@ public class UserController {
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error("请求异常");
             return Result.error("往redis set 值异常！！！");
         }
     }
