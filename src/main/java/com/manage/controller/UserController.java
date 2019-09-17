@@ -4,6 +4,7 @@ import com.manage.base.until.Result;
 import com.manage.dto.UserDTO;
 import com.manage.model.User;
 import com.manage.service.UserService;
+import com.manage.thread.UserThread;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,13 +42,20 @@ public class UserController {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(12L);
         System.out.println("============" + user.getId());
+        Thread userTread = new Thread(new UserThread(userDTO.getId()),"用户线程");
         User user1 = userService.getUserById(user.getId());
+        if (user1==null) {
+            System.out.println("结束");
+            return Result.error("User 信息为空，userId:"+ user.getId());
+        }
+        userTread.start();
         try {
             redisTemplate.opsForValue().set(user1.getUsername(),"usr");
+            System.out.println("结束");
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("请求异常");
+            LOGGER.error("请求异常:  "+e.getMessage());
             return Result.error("往redis set 值异常！！！");
         }
     }
