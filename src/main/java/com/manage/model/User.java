@@ -1,20 +1,22 @@
 package com.manage.model;
 
-import com.manage.base.model.BaseInfo;
 import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * @author hhq
- */
 @Data
-public class User extends BaseInfo implements Serializable {
-    private static final long serialVersionUID = -1353749893029834936L;
+public class User implements Serializable {
+    /**
+     * 用户id
+     */
+    private Long id;
 
-    private Integer id;
-
+    /**
+     * 用户名
+     */
     private String username;
-
+    /**
+     * 用户密码
+     */
     private String password;
 }

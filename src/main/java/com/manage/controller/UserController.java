@@ -3,12 +3,14 @@ package com.manage.controller;
 import com.manage.base.until.Result;
 import com.manage.dto.UserDTO;
 import com.manage.model.User;
+import com.manage.service.OrderManager;
 import com.manage.service.UserService;
 import com.manage.thread.UserThread;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,13 +36,15 @@ public class UserController {
 
     @Resource(name="redisTemplate")
     private RedisTemplate redisTemplate;
+    @Autowired
+    OrderManager orderManager;
 
     @RequestMapping(value = "/setUser", method = RequestMethod.POST)
     @ResponseBody
     public Result setUser(UserDTO user) {
         LOGGER.info("请求进入");
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(12L);
+        userDTO.setId(1L);
         System.out.println("============" + user.getId());
         Thread userTread = new Thread(new UserThread(userDTO.getId()),"用户线程");
         User user1 = userService.getUserById(user.getId());
@@ -64,7 +68,7 @@ public class UserController {
     @ResponseBody
     public Result getUser(UserDTO user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(12L);
+        userDTO.setId(1L);
         System.out.println("============" + user.getId());
         User user1 = userService.getUserById(user.getId());
         try {
@@ -99,6 +103,22 @@ public class UserController {
             e.printStackTrace();
         } catch (InterruptedException ie) { // 当前线程在等待过程中被中断
         } catch (TimeoutException te) { // 在Future对象完成之前超过已过期
+        }
+    }
+
+    @RequestMapping(value = "/testEvent", method = RequestMethod.POST)
+    @ResponseBody
+    public Result testEvent(UserDTO user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+        System.out.println("============" + user.getId());
+        User user1 = userService.getUserById(user.getId());
+        try {
+            orderManager.create(user1);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("创建订单异常！！！");
         }
     }
 }

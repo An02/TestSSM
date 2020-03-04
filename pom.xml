@@ -8,8 +8,7 @@
     <artifactId>com.hhj</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-
-    <name>com.hhj Maven Webapp</name>
+    <name>SSM_START</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -279,15 +278,10 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
             </plugin>
-            <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-            <plugin>
+       <!--     <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
@@ -325,11 +319,11 @@
                 </configuration>
             </plugin>
             <!--idea集成 MyBatis Generator 插件，自动生成dao,model,sql map文件-->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>1.3.2</version>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 </project>
