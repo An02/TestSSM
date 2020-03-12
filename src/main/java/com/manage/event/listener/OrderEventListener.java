@@ -5,6 +5,7 @@ import com.manage.event.order_event.OrderEvent;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +40,7 @@ public class OrderEventListener implements SmartApplicationListener {
 
     @SneakyThrows
     @Override
+    @Async
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         OrderEvent orderEvent = (OrderEvent)applicationEvent;
         OrderDTO orderDTO = orderEvent.getOrder();
@@ -48,6 +50,7 @@ public class OrderEventListener implements SmartApplicationListener {
         } catch (Exception e) {
             System.out.println("======订单处理异常====：");
             System.out.println(e.getMessage());
+            throw new Exception("fsdfs");
         }
         // 收到事件可以处理业务逻辑
     }

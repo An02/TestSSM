@@ -24,7 +24,11 @@
         <!-- 配置逻辑视图的后缀 -->
         <property name="suffix" value=".jsp" />
     </bean>
-
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="maxInMemorySize" value="40960" />
+    </bean>
     <bean id="utf8Charset" class="java.nio.charset.Charset"
           factory-method="forName">
         <constructor-arg value="UTF-8"/>

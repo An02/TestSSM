@@ -13,7 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 public class UserAspect {
     //匹配所有ServiceImpl包下面的所有类的所有方法
     //@Pointcut("@annotation(* com.manage.XXXX)")匹配包含XXX注解的方法
-    @Pointcut("execution(* com.manage.service.serviceImpl.*.*(..))")
+    @Pointcut("@annotation(com.manage.aspect.LogAnnotation)")
     public void addLog(){}
 
 

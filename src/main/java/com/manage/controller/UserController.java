@@ -6,6 +6,8 @@ import com.manage.model.User;
 import com.manage.service.OrderManager;
 import com.manage.service.UserService;
 import com.manage.thread.UserThread;
+import com.manage.util.Excel2007Util;
+import com.manage.util.ExportUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,8 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 
@@ -108,17 +121,71 @@ public class UserController {
 
     @RequestMapping(value = "/testEvent", method = RequestMethod.POST)
     @ResponseBody
-    public Result testEvent(UserDTO user) {
+    public Result testEvent(@RequestBody UserDTO user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1L);
         System.out.println("============" + user.getId());
-        User user1 = userService.getUserById(user.getId());
         try {
+            User user1 = userService.getUserById(user.getId());
             orderManager.create(user1);
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("创建订单异常！！！");
+        }
+    }
+
+
+    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView export(HttpServletRequest request, HttpServletResponse response) {
+        String[] columnArr = new String[]{"userNo&#用户编号", "remarks&#备注"};
+        try {
+            write(response, columnArr, "导出文件模板");
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+    /**
+     * description: 生成并输出导入模版excel文件
+     *
+     * @param response
+     * @param columnArr
+     * @param fileName
+     * @return void
+     * @author tianhua.xie（tianhua.xie@ucarinc.com）
+     * @date 2019-02-28 17:27:51
+     **/
+    private static void write(HttpServletResponse response, String[] columnArr, String fileName) throws IOException {
+        Excel2007Util excelUtil = new Excel2007Util();
+
+        List<Map<String, String>> listData = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
+        map.put("frameNo","测试借用单");
+        listData.add(map);
+        OutputStream outputStream = response.getOutputStream();
+        InputStream inputStream = null;
+        int len;
+        byte[] bytes = new byte[1024];
+
+        response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8") + ".xlsx");
+
+        try {
+            inputStream = excelUtil.exportForListPage(columnArr, listData);
+            while ((len = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, len);
+            }
+            outputStream.flush();
+            response.flushBuffer();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
         }
     }
 }
