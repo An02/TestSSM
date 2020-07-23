@@ -5,6 +5,7 @@ import com.manage.event.order_event.OrderEvent;
 import com.manage.event.publish.OrderPublishService;
 import com.manage.model.User;
 import com.manage.service.OrderManager;
+import com.manage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,14 @@ import java.util.Date;
  * @CreateDate: 2019/12/13 15:12
  * @Version: 1.0
  */
-@Service("orderManagerImpl")
+@Service("orderManager")
 public class OrderManagerImpl implements OrderManager {
     @Autowired
     @Qualifier("orderPublishServiceImpl")
     OrderPublishService orderPublishService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public void create(User user) {

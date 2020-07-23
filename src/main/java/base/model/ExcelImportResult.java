@@ -18,7 +18,7 @@ public class ExcelImportResult {
     /** 失败条数 */
     private int errNum = 0;
     /** 每条处理结果 */
-    private List<ExcelImportModel> items;
+    private List<? extends ExcelImportModel> items;
     /** 整体返回消息 */
     private String msg;
     /** 详情信息 */
@@ -61,11 +61,11 @@ public class ExcelImportResult {
         this.errNum = errNum;
     }
 
-    public List<ExcelImportModel> getItems() {
+    public List<? extends ExcelImportModel> getItems() {
         return items;
     }
 
-    public void setItems(List<ExcelImportModel> items) {
+    public void setItems(List<? extends ExcelImportModel> items) {
         this.items = items;
     }
 

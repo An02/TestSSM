@@ -2,6 +2,7 @@ package com.manage.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * @Description: 类作用描述
@@ -10,10 +11,13 @@ import java.lang.reflect.Method;
  * @Version: 1.0
  */
 public class DynamicProxy implements InvocationHandler {
-    //obj为委托类对象;
+    /**
+     * obj为委托类对象
+     */
     private Object obj;
 
     public DynamicProxy(Object obj) {
+        super();
         this.obj = obj;
     }
 
@@ -23,5 +27,9 @@ public class DynamicProxy implements InvocationHandler {
         Object result = method.invoke(obj, args);
         System.out.println("after");
         return result;
+    }
+
+    public Object getProxy(){
+        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), obj.getClass().getInterfaces(), this);
     }
 }
